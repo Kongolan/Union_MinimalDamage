@@ -18,9 +18,9 @@ namespace GOTHIC_NAMESPACE
 		}
 
 		// 2. Fallback: Sehr auffällige Ausgabe im zSpy / Entwickler-Konsole
-		zerr.Message("=========================================================");
-		zerr.Message(">>> HELLO WORLD: Union_MinimalDamage ERFOLGREICH GELADEN! <<<");
-		zerr.Message("=========================================================");
+		zerr->Message("=========================================================");
+		zerr->Message(">>> HELLO WORLD: Union_MinimalDamage ERFOLGREICH GELADEN! <<<");
+		zerr->Message("=========================================================");
 	}
 
 	void Game_Exit()
