@@ -21,10 +21,16 @@ jobs:
         with:
           arch: x86
 
+      # 1. ZWINGEND ERFORDERLICH: Installiert die 32-bit Runtimes für GothicVDFS
+      - name: Install vcredist (x86)
+        run: |
+          Invoke-WebRequest -Uri "https://aka.ms/vs/17/release/vc_redist.x86.exe" -OutFile "vc_redist.x86.exe"
+          Start-Process -FilePath "vc_redist.x86.exe" -ArgumentList "/install /quiet /norestart" -Wait
+
       - name: Configure CMake (G2A-Release)
         run: cmake . --preset G2A-Release
 
-      # SICHERHEITSNETZ: Beide Ordner erzwingen, damit GothicVDFS nicht abstürzt
+      # 2. SICHERHEITSNETZ: Beide Ordner erzwingen, damit GothicVDFS nicht abstürzt
       - name: Prepare VDF Environment
         run: |
           mkdir -p out/build/G2A-Release/vdf/System/Autorun
