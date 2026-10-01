@@ -1,0 +1,47 @@
+name: Build Gothic Union Plugin
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+
+      - name: Set up MSVC
+        uses: ilammy/msvc-dev-cmd@v1.13.0
+        with:
+          arch: x86
+
+      - name: Configure CMake (G2A-Release)
+        run: cmake . --preset G2A-Release
+
+      - name: Build Plugin
+        run: cmake --build --preset G2A-Release
+
+      - name: Find generated VDF file
+        id: find_vdf
+        run: |
+          # Sucht rekursiv nach der generierten .vdf Datei
+          $vdf_path = Get-ChildItem -Recurse -Filter "*.vdf" | Select-Object -First 1 -ExpandProperty FullName
+          if ($vdf_path) {
+            echo "Gefundene VDF: $vdf_path"
+            echo "VDF_FILE=$vdf_path" >> $env:GITHUB_ENV
+          } else {
+            Write-Error "Es konnte keine .vdf Datei gefunden werden! Bitte CMakeLists.txt und build.vm prüfen."
+          }
+        shell: powershell
+
+      - name: Upload Mod Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Union_MinimalDamage_VDF
+          path: ${{ env.VDF_FILE }}
