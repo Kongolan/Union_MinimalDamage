@@ -24,6 +24,13 @@ jobs:
       - name: Configure CMake (G2A-Release)
         run: cmake . --preset G2A-Release
 
+      # SICHERHEITSNETZ: Beide Ordner erzwingen, damit GothicVDFS nicht abstürzt
+      - name: Prepare VDF Environment
+        run: |
+          mkdir -p out/build/G2A-Release/vdf/System/Autorun
+          mkdir -p out/build/G2A-Release/vdf/_Work
+        shell: bash
+
       - name: Build Plugin
         run: cmake --build --preset G2A-Release
 
